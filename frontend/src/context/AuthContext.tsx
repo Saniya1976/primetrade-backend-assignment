@@ -39,7 +39,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         router.push('/dashboard');
     };
 
-    const logout = () => {
+    const logout = async () => {
+        try {
+            const api = (await import('@/lib/api')).default;
+            await api.get('/auth/logout');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
         setUser(null);
         localStorage.removeItem('user');
         router.push('/login');

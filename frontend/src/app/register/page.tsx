@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
         try {
             const { confirmPassword, ...registerData } = formData;
-            const response = await api.post('/auth/register', registerData);
+            const response = await api.post('/auth/signup', registerData);
 
             login(response.data);
             toast.success(`Welcome aboard, ${response.data.name}!`);

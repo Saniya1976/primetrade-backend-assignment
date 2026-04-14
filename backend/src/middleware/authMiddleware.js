@@ -8,28 +8,33 @@ const protect = async (req, res, next) => {
         req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')
     ) {
-        try {
-            token = req.headers.authorization.split(' ')[1];
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.token) {
+        token = req.cookies.token;
+    }
 
-            req.user = await prisma.user.findUnique({
-                where: { id: decoded.id },
-                select: { id: true, email: true, name: true, role: true },
-            });
-
-            if (!req.user) {
-                res.status(401);
-                return next(new Error('User not found'));
-            }
-
-            next();
-        } catch (error) {
-            res.status(401);
-            next(new Error('Not authorized, token failed'));
-        }
-    } else {
+    if (!token) {
         res.status(401);
-        next(new Error('Not authorized, no token'));
+        return next(new Error('Not authorized, no token'));
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        req.user = await prisma.user.findUnique({
+            where: { id: decoded.id },
+            select: { id: true, email: true, name: true, role: true },
+        });
+
+        if (!req.user) {
+            res.status(401);
+            return next(new Error('User not found'));
+        }
+
+        next();
+    } catch (error) {
+        res.status(401);
+        next(new Error('Not authorized, token failed'));
     }
 };
 

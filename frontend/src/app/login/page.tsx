@@ -19,7 +19,7 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            const response = await api.post('/auth/login', { email, password });
+            const response = await api.post('/auth/signin', { email, password });
             login(response.data);
             toast.success(`Welcome back, ${response.data.name}!`);
         } catch (error: any) {

@@ -1,21 +1,37 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const healthRoutes = require('./routes/healthRoutes');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 
-dotenv.config();
-
 const app = express();
 
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: 'Too many requests, please try again later'
+});
+
 app.use(helmet());
-app.use(cors());
+app.use(limiter);
+app.use(cors({
+    origin: true, // Allow any origin for development, or specify your frontend URL
+    credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(cookieParser());
+app.use(hpp());
 
 // Routes v1
 const apiPrefix = '/api/v1';

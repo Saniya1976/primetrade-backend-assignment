@@ -1,74 +1,64 @@
-const bcrypt = require('bcryptjs');
-const prisma = require('../utils/prisma');
+const authService = require('../services/authService');
 const generateToken = require('../utils/generateToken');
+
+// Generate Token and Set Cookie
+const sendTokenResponse = (user, statusCode, res) => {
+    const token = generateToken(user.id);
+
+    const options = {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    };
+
+    res.status(statusCode).cookie('token', token, options).json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token
+    });
+};
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res, next) => {
-    const { name, email, password, role } = req.body;
-
     try {
-        const userExists = await prisma.user.findUnique({ where: { email } });
-
-        if (userExists) {
-            res.status(400);
-            throw new Error('User already exists');
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                password: hashedPassword,
-                role: role || 'USER',
-            },
-        });
-
-        if (user) {
-            res.status(201).json({
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                token: generateToken(user.id),
-            });
-        } else {
-            res.status(400);
-            throw new Error('Invalid user data');
-        }
+        const user = await authService.register(req.body);
+        sendTokenResponse(user, 201, res);
     } catch (error) {
+        if (error.statusCode) res.status(error.statusCode);
         next(error);
     }
 };
 
 // @desc    Auth user & get token
-// @route   POST /api/auth/login
+// @route   POST /api/auth/signin
 // @access  Public
 const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
     try {
-        const user = await prisma.user.findUnique({ where: { email } });
-
-        if (user && (await bcrypt.compare(password, user.password))) {
-            res.json({
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                token: generateToken(user.id),
-            });
-        } else {
-            res.status(401);
-            throw new Error('Invalid email or password');
-        }
+        const user = await authService.login(email, password);
+        sendTokenResponse(user, 200, res);
     } catch (error) {
+        if (error.statusCode) res.status(error.statusCode);
         next(error);
     }
 };
 
-module.exports = { registerUser, loginUser };
+// @desc    Logout user / clear cookie
+// @route   GET /api/auth/logout
+// @access  Private
+const logoutUser = async (req, res, next) => {
+    res.cookie('token', 'none', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true
+    });
+
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+};
+
+module.exports = { registerUser, loginUser, logoutUser };
