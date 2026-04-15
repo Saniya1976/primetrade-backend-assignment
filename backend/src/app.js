@@ -26,7 +26,9 @@ const limiter = rateLimit({
 });
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: false,
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(hpp());
