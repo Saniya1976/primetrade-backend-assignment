@@ -25,8 +25,7 @@ const limiter = rateLimit({
 app.use(helmet());
 app.use(limiter);
 app.use(cors({
-    origin: true, // Allow any origin for development, or specify your frontend URL
-    credentials: true
+  origin: "*"
 }));
 app.use(morgan('dev'));
 app.use(express.json());
