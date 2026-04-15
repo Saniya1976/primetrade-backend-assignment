@@ -12,7 +12,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-slate-50">
       <Navbar />
 
-      <main className="flex-grow">
+      <main className="grow">
         {/* Hero Section */}
         <section className="relative py-24 md:py-32 overflow-hidden">
           {/* Decorative Blooms */}
@@ -23,7 +23,7 @@ export default function Home() {
 
             <h1 className="text-4xl md:text-6xl font-black mb-8 text-slate-900 tracking-tight leading-[1.1]">
               Smart Inventory <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">
                 Better Business.
               </span>
             </h1>

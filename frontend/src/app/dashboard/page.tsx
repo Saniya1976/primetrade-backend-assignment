@@ -152,7 +152,7 @@ export default function Dashboard() {
 
                 {/* Create Form */}
                 {isAdding && (
-                    <div className="mb-12 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/50 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div className="mb-12 bg-white p-8 rounded-4xl border border-slate-100 shadow-xl shadow-slate-200/50 animate-in fade-in slide-in-from-top-4 duration-300">
                         <h2 className="text-2xl font-black mb-6 text-slate-900 border-b border-slate-50 pb-4">New Entry</h2>
                         <form onSubmit={handleCreate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div className="lg:col-span-2">

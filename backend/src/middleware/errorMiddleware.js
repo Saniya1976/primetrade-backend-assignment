@@ -1,9 +1,18 @@
 const { ZodError } = require('zod');
+const logger = require('../utils/logger');
 
 const errorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
     let message = err.message;
     let errors = null;
+
+    // Log the error
+    logger.error(`${req.method} ${req.originalUrl} - ${err.message}`, {
+        stack: err.stack,
+        statusCode,
+        body: req.body,
+        user: req.user ? req.user.id : 'anonymous'
+    });
 
     // Handle Zod Validation Errors
     if (err instanceof ZodError) {
