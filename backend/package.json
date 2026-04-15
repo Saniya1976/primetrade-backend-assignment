@@ -1,21 +1,33 @@
 {
-    "name": "primetrade-backend-assignment",
+    "name": "backend",
     "version": "1.0.0",
-    "private": true,
-    "workspaces": ["backend", "frontend"],
     "scripts": {
-        "dev:backend": "npm run dev --workspace=backend",
-        "dev:frontend": "npm run dev --workspace=frontend",
-        "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-        "build": "npm run build --workspace=frontend",
-        "start": "npm run start --workspace=backend",
-        "postinstall": "npm run build"
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js",
+        "migrate": "prisma migrate deploy",
+        "generate": "prisma generate"
+    },
+    "dependencies": {
+        "@prisma/adapter-pg": "^7.7.0",
+        "@prisma/client": "^7.7.0",
+        "bcryptjs": "^3.0.3",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^17.4.2",
+        "express": "^5.2.1",
+        "express-rate-limit": "^8.3.2",
+        "helmet": "^8.1.0",
+        "hpp": "^0.2.3",
+        "jsonwebtoken": "^9.0.3",
+        "morgan": "^1.10.1",
+        "pg": "^8.20.0",
+        "prisma": "^7.7.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1",
+        "winston": "^3.19.0",
+        "xss-clean": "^0.1.4",
+        "zod": "^4.3.6"
     },
     "devDependencies": {
-        "concurrently": "^8.2.2"
-    },
-    "engines": {
-        "node": "20.x",
-        "npm": "10.x"
+        "nodemon": "^3.1.14"
     }
 }

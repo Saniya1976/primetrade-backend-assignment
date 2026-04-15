@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-.env
-=======
-# Dependencies
 node_modules
 .pnp
 .pnp.js
@@ -35,7 +31,5 @@ yarn-error.log*
 .vercel
 
 # Prisma
-# /backend/prisma/migrations
-# /backend/prisma/dev.db
-# /backend/prisma/dev.db-journal
->>>>>>> 4a216ca (backend  primetrade)
+/backend/prisma/dev.db
+/backend/prisma/dev.db-journal
