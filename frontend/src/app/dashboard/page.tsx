@@ -230,7 +230,7 @@ export default function Dashboard() {
                                         <input
                                             value={productForm.name}
                                             onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-bold focus:ring-2 focus:ring-blue-500 outline-none"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                                         />
                                         <div className="relative">
                                             <DollarSign className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -238,13 +238,13 @@ export default function Dashboard() {
                                                 type="number"
                                                 value={productForm.price}
                                                 onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-8 py-2 font-mono focus:ring-2 focus:ring-blue-500 outline-none"
+                                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-8 py-2 font-mono text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none"
                                             />
                                         </div>
                                         <textarea
                                             value={productForm.description}
                                             onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
-                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none min-h-[80px]"
+                                            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none min-h-[80px]"
                                         />
                                         <div className="flex gap-2">
                                             <button onClick={() => handleUpdate(product.id)} className="flex-1 bg-blue-600 text-white py-2 rounded-xl font-bold flex justify-center hover:bg-blue-700 transition-colors"><Save size={18} /></button>
