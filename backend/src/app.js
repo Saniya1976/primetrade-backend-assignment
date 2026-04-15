@@ -25,7 +25,8 @@ const limiter = rateLimit({
 app.use(helmet());
 app.use(limiter);
 app.use(cors({
-  origin: "*"
+  origin: "https://primetrade-backend-assignment-front.vercel.app",
+  credentials: true
 }));
 app.use(morgan('dev'));
 app.use(express.json());
