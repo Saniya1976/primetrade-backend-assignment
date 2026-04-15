@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
+const path = require('path'); // IMPORTANT: Add this
 
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
@@ -30,13 +31,10 @@ app.use(helmet());
 app.use(limiter);
 
 /**
- * CORS CONFIG (IMPORTANT FIX)
+ * CORS CONFIG - Simplified for same domain
  */
 app.use(cors({
-  origin: [
-    "https://primetrade-backend-assignment-front.vercel.app",
-    "http://localhost:3000"
-  ],
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
@@ -61,6 +59,27 @@ app.use(`${apiPrefix}/products`, productRoutes);
 app.get('/', (req, res) => {
   res.send('🚀 PrimeTrade API is running (v1)');
 });
+
+// ==========================================
+// SERVE FRONTEND (SCENARIO 1)
+// ==========================================
+if (process.env.NODE_ENV === 'production') {
+  // Path to your built Next.js app
+  const frontendPath = path.join(__dirname, '../../frontend/out');
+  
+  console.log(`📦 Serving frontend from: ${frontendPath}`);
+  
+  // Serve static files
+  app.use(express.static(frontendPath));
+  
+  // Handle client-side routing - all non-API routes go to index.html
+  app.get('*', (req, res) => {
+    // Don't interfere with API routes
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(frontendPath, 'index.html'));
+    }
+  });
+}
 
 /**
  * ERROR HANDLERS
