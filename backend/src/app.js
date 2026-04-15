@@ -20,9 +20,9 @@ const app = express();
 
 // Rate Limiting - apply only to API routes
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests, please try again later'
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    message: 'Too many requests, please try again later'
 });
 
 // Security middleware
@@ -37,10 +37,10 @@ app.use('/api', limiter);
 
 // CORS - only needed for local development
 if (process.env.NODE_ENV === 'development') {
-  app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-  }));
+    app.use(cors({
+        origin: 'http://localhost:3000',
+        credentials: true
+    }));
 }
 
 // API Routes
@@ -51,37 +51,37 @@ app.use(`${apiPrefix}/products`, productRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV 
-  });
+    res.json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV
+    });
 });
 
 // Serve frontend in production (Scenario 1)
 if (process.env.NODE_ENV === 'production') {
-  const frontendPath = path.join(__dirname, '../../frontend/out');
-  
-  // Check if frontend build exists
-  const fs = require('fs');
-  if (fs.existsSync(frontendPath)) {
-    console.log(`✅ Serving frontend from: ${frontendPath}`);
-    app.use(express.static(frontendPath));
-    
-    // Handle client-side routing - all non-API routes go to index.html
-    app.get('*', (req, res) => {
-      if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(frontendPath, 'index.html'));
-      }
-    });
-  } else {
-    console.warn(`⚠️ Frontend build not found at: ${frontendPath}`);
-  }
+    const frontendPath = path.join(__dirname, '../../frontend/out');
+
+    // Check if frontend build exists
+    const fs = require('fs');
+    if (fs.existsSync(frontendPath)) {
+        console.log(`✅ Serving frontend from: ${frontendPath}`);
+        app.use(express.static(frontendPath));
+
+        // Handle client-side routing - all non-API routes go to index.html
+        app.get('*path', (req, res) => {
+            if (!req.path.startsWith('/api')) {
+                res.sendFile(path.join(frontendPath, 'index.html'));
+            }
+        });
+    } else {
+        console.warn(`⚠️ Frontend build not found at: ${frontendPath}`);
+    }
 }
 
 // 404 handler for API routes
-app.use('/api/*', (req, res) => {
-  res.status(404).json({ error: 'API endpoint not found' });
+app.use('/api/*path', (req, res) => {
+    res.status(404).json({ error: 'API endpoint not found' });
 });
 
 // Error handlers
